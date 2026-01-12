@@ -56,7 +56,7 @@ export const PlaygroundScreen = () => {
 
         try {
             for (let i = 0; i < chunks; i++) {
-                const range = `question nomor ${i + 1}`;
+                const range = `question number ${i + 1}`;
 
                 const config = activeExam!.config;
                 const skill = config.skills[Math.floor(Math.random() * config.skills.length)];
