@@ -3,6 +3,11 @@
 import { cx } from "@/utils/cx";
 
 const styles = {
+    xs: {
+        root: "gap-2",
+        label: "text-xs font-medium",
+        spinner: "size-5",
+    },
     sm: {
         root: "gap-4",
         label: "text-sm font-medium",
@@ -25,7 +30,7 @@ const styles = {
     },
 };
 
-interface LoadingIndicatorProps {
+interface LoadingIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
     /**
      * The visual style of the loading indicator.
      * @default 'line-simple'
@@ -35,14 +40,14 @@ interface LoadingIndicatorProps {
      * The size of the loading indicator.
      * @default 'sm'
      */
-    size?: "sm" | "md" | "lg" | "xl";
+    size?: "xs" | "sm" | "md" | "lg" | "xl";
     /**
      * Optional text label displayed below the indicator.
      */
     label?: string;
 }
 
-export const LoadingIndicator = ({ type = "line-simple", size = "sm", label }: LoadingIndicatorProps) => {
+export const LoadingIndicator = ({ type = "line-simple", size = "sm", label, className, ...props }: LoadingIndicatorProps) => {
     const renderSpinner = () => {
         if (type === "line-spinner") {
             return (
@@ -115,7 +120,7 @@ export const LoadingIndicator = ({ type = "line-simple", size = "sm", label }: L
     };
 
     return (
-        <div className={cx("flex flex-col items-center justify-center", styles[size].root)}>
+        <div className={cx("flex flex-col items-center justify-center", styles[size].root, className)} {...props}>
             {renderSpinner()}
             {label && <span className={cx("text-secondary", styles[size].label)}>{label}</span>}
         </div>

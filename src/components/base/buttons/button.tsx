@@ -6,6 +6,7 @@ import type { ButtonProps as AriaButtonProps } from "react-aria-components";
 import { Button as AriaButton, Link as AriaLink } from "react-aria-components";
 import { cx, sortCx } from "@/utils/cx";
 import { isReactComponent } from "@/utils/is-react-component";
+import { LoadingIndicator } from "@/components/application/loading-indicator/loading-indicator";
 
 export const styles = sortCx({
     common: {
@@ -165,7 +166,7 @@ export interface ButtonProps extends CommonProps, DetailedHTMLProps<Omit<ButtonH
 /**
  * Props for the link variant (anchor tag)
  */
-interface LinkProps extends CommonProps, DetailedHTMLProps<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color">, HTMLAnchorElement> {}
+interface LinkProps extends CommonProps, DetailedHTMLProps<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "color">, HTMLAnchorElement> { }
 
 /** Union type of button and link props */
 export type Props = ButtonProps | LinkProps;
@@ -235,29 +236,10 @@ export const Button = ({
             {isReactComponent(IconLeading) && <IconLeading data-icon="leading" className={styles.common.icon} />}
 
             {loading && (
-                <svg
-                    fill="none"
-                    data-icon="loading"
-                    viewBox="0 0 20 20"
-                    className={cx(styles.common.icon, !showTextWhileLoading && "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2")}
-                >
-                    {/* Background circle */}
-                    <circle className="stroke-current opacity-30" cx="10" cy="10" r="8" fill="none" strokeWidth="2" />
-                    {/* Spinning circle */}
-                    <circle
-                        className="origin-center animate-spin stroke-current"
-                        cx="10"
-                        cy="10"
-                        r="8"
-                        fill="none"
-                        strokeWidth="2"
-                        strokeDasharray="12.5 50"
-                        strokeLinecap="round"
-                    />
-                </svg>
+                <LoadingIndicator data-icon="loading" type="line-simple" size="xs" />
             )}
 
-            {children && (
+            {children && !loading && (
                 <span data-text className={cx("transition-inherit-all", !noTextPadding && "px-0.5")}>
                     {children}
                 </span>

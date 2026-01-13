@@ -16,25 +16,33 @@ export const ConfigForm = () => {
     const [questionCount, setQuestionCount] = useState(10);
     const [selectedSkills, setSelectedSkills] = useState<SkillType[]>(["Reading"]);
     const [selectedTypes, setSelectedTypes] = useState<QuestionType[]>(["Multiple Choice"]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleGenerate = () => {
-        if (questionCount === 0) {
-            return;
+        setIsLoading(true);
+
+        try {
+            if (questionCount === 0) {
+                return;
+            }
+
+            if (selectedSkills.length === 0 || selectedTypes.length === 0) {
+                alert("Please select at least one skill and one question type.");
+                return;
+            }
+
+            const examId = createNewExam({
+                questionCount,
+                skills: selectedSkills,
+                types: selectedTypes,
+            });
+
+            // We'll redirect to playground where generation happens
+            router.push(`/playground/${examId}`);
+        } catch (e) {
+            console.error(e);
+            setIsLoading(false);
         }
-
-        if (selectedSkills.length === 0 || selectedTypes.length === 0) {
-            alert("Please select at least one skill and one question type.");
-            return;
-        }
-
-        const examId = createNewExam({
-            questionCount,
-            skills: selectedSkills,
-            types: selectedTypes,
-        });
-
-        // We'll redirect to playground where generation happens
-        router.push(`/playground/${examId}`);
     };
 
     const toggleSkill = (skill: SkillType) => {
@@ -61,6 +69,7 @@ export const ConfigForm = () => {
                     <Label>Number of Questions</Label>
                     <Input
                         type="number"
+                        inputMode="numeric"
                         value={questionCount.toString()}
                         onChange={(val: string) => {
                             const num = parseInt(val) || 0;
@@ -122,7 +131,7 @@ export const ConfigForm = () => {
                 </div>
             </div>
 
-            <Button size="xl" onClick={handleGenerate} className="w-full">
+            <Button size="xl" onClick={handleGenerate} disabled={isLoading} isLoading={isLoading} className="w-full">
                 Generate Test questions
             </Button>
         </div>
